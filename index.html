@@ -1,1 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Royal Wedding Invitation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        margin: 0;
+        font-family: 'Georgia', serif;
+        background: linear-gradient(135deg, #2c1a0a, #5a3a12);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        color: #fff;
+    }
 
+    .card {
+        width: 90%;
+        max-width: 400px;
+        padding: 30px;
+        border-radius: 15px;
+        background: #fff8e7;
+        color: #3a2a10;
+        text-align: center;
+        position: relative;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    }
+
+    h1 {
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
+
+    .names {
+        font-size: 22px;
+        font-weight: bold;
+        margin: 20px 0;
+    }
+
+    canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-radius: 15px;
+    }
+
+    .hint {
+        margin-top: 15px;
+        font-size: 14px;
+        color: #7a5a20;
+    }
+</style>
+</head>
+<body>
+
+<div class="card" id="card">
+    <h1>Royal Wedding Invitation</h1>
+    <div class="names">
+        Moris Solomon<br>
+        &<br>
+        Jennifer Maseeh
+    </div>
+    <p><strong>Date:</strong> 10th April 2026</p>
+    <p><strong>Venue:</strong><br>ST Ann's Church (White Church)</p>
+    <p>We request the honour of your presence.</p>
+    <div class="hint">Scratch above to reveal the details</div>
+    <canvas id="scratch"></canvas>
+</div>
+
+<script>
+const canvas = document.getElementById("scratch");
+const card = document.getElementById("card");
+const ctx = canvas.getContext("2d");
+
+canvas.width = card.offsetWidth;
+canvas.height = card.offsetHeight;
+
+ctx.fillStyle = "#c9a227";
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+ctx.globalCompositeOperation = "destination-out";
+
+let isDrawing = false;
+
+function getPosition(e) {
+    const rect = canvas.getBoundingClientRect();
+    if (e.touches) {
+        return {
+            x: e.touches[0].clientX - rect.left,
+            y: e.touches[0].clientY - rect.top
+        };
+    }
+    return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+    };
+}
+
+function draw(e) {
+    if (!isDrawing) return;
+    e.preventDefault();
+    const pos = getPosition(e);
+    ctx.beginPath();
+    ctx.arc(pos.x, pos.y, 20, 0, Math.PI * 2);
+    ctx.fill();
+}
+
+canvas.addEventListener("mousedown", () => isDrawing = true);
+canvas.addEventListener("mouseup", () => isDrawing = false);
+canvas.addEventListener("mousemove", draw);
+
+canvas.addEventListener("touchstart", () => isDrawing = true);
+canvas.addEventListener("touchend", () => isDrawing = false);
+canvas.addEventListener("touchmove", draw);
+</script>
+
+</body>
+</html>
